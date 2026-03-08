@@ -233,7 +233,7 @@ function Btn({ children, primary, onClick }) {
 export const cases = [
   {
     slug: "national-pension-scheme",
-    title: "National Pension Scheme",
+    title: "Nation Pension Scheme Onboarding",
     subtitle: "Redesigning the NPS experience for millions of subscribers",
     desc: "End-to-end redesign of the National Pension Scheme portal — simplifying complex financial workflows and making retirement planning accessible to all.",
     tags: [{ label: "Product Design", color: "#fde8d8", text: T.clay }, { label: "Gov-Tech", color: "#fde8d8", text: T.clay }],

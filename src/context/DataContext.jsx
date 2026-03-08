@@ -80,16 +80,18 @@ export function DataProvider({ children }) {
   const [education, setEducation] = useState(defaultEducation);
   const [personalInfo, setPersonalInfo] = useState(defaultPersonalInfo);
   const [caseVisibility, setCaseVisibility] = useState({});
+  const [workLogs, setWorkLogs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [visSnap, expSnap, eduSnap, infoSnap] = await Promise.all([
+        const [visSnap, expSnap, eduSnap, infoSnap, logsSnap] = await Promise.all([
           fetchCollection("caseVisibility"),
           fetchCollection("experiences"),
           fetchCollection("education"),
           fetchCollection("personalInfo"),
+          fetchCollection("workLogs"),
         ]);
 
         // Case visibility map: { slug: true/false }
@@ -100,6 +102,7 @@ export function DataProvider({ children }) {
         if (expSnap.length > 0) setExperiences(expSnap);
         if (eduSnap.length > 0) setEducation(eduSnap);
         if (infoSnap.length > 0) setPersonalInfo({ ...defaultPersonalInfo, ...infoSnap[0] });
+        if (logsSnap.length > 0) setWorkLogs([...logsSnap].sort((a, b) => b.date.localeCompare(a.date)));
       } catch {
         // Firebase not configured yet — use defaults
       } finally {
@@ -113,55 +116,102 @@ export function DataProvider({ children }) {
   const cases = hardcodedCases.filter((c) => !caseVisibility[c.slug]);
 
   // ── Helpers ────────────────────────────────────────────────────────────────
+  const today = () => new Date().toISOString().slice(0, 10);
+
   async function toggleCaseVisibility(slug) {
     const isHidden = caseVisibility[slug] ?? false;
     const next = !isHidden;
     await saveDoc("caseVisibility", slug, { hidden: next });
     setCaseVisibility((prev) => ({ ...prev, [slug]: next }));
+    const caseTitle = hardcodedCases.find((c) => c.slug === slug)?.title ?? slug;
+    await saveLog({
+      date: today(), category: "Content Update", area: "Case Studies",
+      title: next ? `Hid case study from portfolio: ${caseTitle}` : `Made case study visible on portfolio: ${caseTitle}`,
+    });
   }
 
   async function saveExperience(exp) {
     const id = exp.id || `exp-${Date.now()}`;
     const data = { ...exp, id };
+    const isEdit = experiences.some((e) => e.id === id);
     await saveDoc("experiences", id, data);
     setExperiences((prev) => {
       const idx = prev.findIndex((e) => e.id === id);
       return idx >= 0 ? prev.map((e) => (e.id === id ? data : e)) : [...prev, data];
     });
+    await saveLog({
+      date: today(), category: "Content Update", area: "Experience",
+      title: isEdit ? `Updated experience: ${data.role} at ${data.company}` : `Added new experience: ${data.role} at ${data.company}`,
+    });
   }
 
   async function deleteExperience(id) {
+    const entry = experiences.find((e) => e.id === id);
     await removeDoc("experiences", id);
     setExperiences((prev) => prev.filter((e) => e.id !== id));
+    if (entry) await saveLog({
+      date: today(), category: "Content Update", area: "Experience",
+      title: `Removed experience: ${entry.role} at ${entry.company}`,
+    });
   }
 
   async function saveEducation(edu) {
     const id = edu.id || `edu-${Date.now()}`;
     const data = { ...edu, id };
+    const isEdit = education.some((e) => e.id === id);
     await saveDoc("education", id, data);
     setEducation((prev) => {
       const idx = prev.findIndex((e) => e.id === id);
       return idx >= 0 ? prev.map((e) => (e.id === id ? data : e)) : [...prev, data];
     });
+    await saveLog({
+      date: today(), category: "Content Update", area: "Education",
+      title: isEdit ? `Updated education: ${data.degree} at ${data.school}` : `Added new education: ${data.degree} at ${data.school}`,
+    });
   }
 
   async function deleteEducation(id) {
+    const entry = education.find((e) => e.id === id);
     await removeDoc("education", id);
     setEducation((prev) => prev.filter((e) => e.id !== id));
+    if (entry) await saveLog({
+      date: today(), category: "Content Update", area: "Education",
+      title: `Removed education: ${entry.degree} at ${entry.school}`,
+    });
   }
 
   async function savePersonalInfo(info) {
     await saveDoc("personalInfo", "main", info);
     setPersonalInfo(info);
+    await saveLog({
+      date: today(), category: "Content Update", area: "Personal Info",
+      title: "Updated personal info and bio",
+    });
+  }
+
+  async function saveLog(log) {
+    const id = log.id || `log-${Date.now()}`;
+    const data = { ...log, id };
+    await saveDoc("workLogs", id, data);
+    setWorkLogs((prev) => {
+      const others = prev.filter((l) => l.id !== id);
+      return [data, ...others].sort((a, b) => b.date.localeCompare(a.date));
+    });
+  }
+
+  async function deleteLog(id) {
+    await removeDoc("workLogs", id);
+    setWorkLogs((prev) => prev.filter((l) => l.id !== id));
   }
 
   return (
     <DataContext.Provider value={{
-      cases, caseVisibility, experiences, education, personalInfo, loading,
+      cases, caseVisibility, experiences, education, personalInfo, workLogs, loading,
       toggleCaseVisibility,
       saveExperience, deleteExperience,
       saveEducation, deleteEducation,
       savePersonalInfo,
+      saveLog, deleteLog,
     }}>
       {children}
     </DataContext.Provider>

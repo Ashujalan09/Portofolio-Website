@@ -310,8 +310,159 @@ function PersonalInfoTab() {
   );
 }
 
+// ── Work Logs Tab ─────────────────────────────────────────────────────────────
+const CATEGORIES = ["Content Update", "New Feature", "Design Change", "Fix"];
+const AREAS = ["Case Studies", "Experience", "Education", "Personal Info", "Admin", "Code & Infrastructure"];
+const CATEGORY_COLORS = {
+  "Content Update": { bg: "#f0c99a", text: "#7a4a1a" },
+  "New Feature":    { bg: "#b8d4c8", text: "#2a5a4a" },
+  "Design Change":  { bg: "#e8e0d8", text: "#5a4a3a" },
+  "Fix":            { bg: "#fddcdc", text: "#a03030" },
+};
+
+const SEED_LOGS = [
+  {
+    id: "log-seed-1",
+    date: "2026-03-08",
+    category: "Content Update",
+    area: "Case Studies",
+    title: "Renamed the NPS case study",
+    description: "Changed the project title from \"National Pension Scheme\" to \"Nation Pension Scheme Onboarding\" to more accurately reflect the scope of the work shown.",
+  },
+  {
+    id: "log-seed-2",
+    date: "2026-03-07",
+    category: "New Feature",
+    area: "Admin",
+    title: "Admin panel launched",
+    description: "Built a password-protected admin section at /admin, making it possible to manage all portfolio content without touching any code. Includes tabs for case studies, work experience, education, and personal info.",
+  },
+  {
+    id: "log-seed-3",
+    date: "2026-03-07",
+    category: "New Feature",
+    area: "Code & Infrastructure",
+    title: "Connected to a live cloud database",
+    description: "Linked the portfolio to Firebase so all content changes made in the admin panel are saved permanently and show up on the live site instantly — no manual file edits needed.",
+  },
+  {
+    id: "log-seed-4",
+    date: "2026-03-07",
+    category: "New Feature",
+    area: "Case Studies",
+    title: "Case study visibility control",
+    description: "Added the ability to show or hide individual case studies on the portfolio without deleting them. Useful for temporarily removing work from public view while keeping it stored.",
+  },
+];
+
+const emptyLog = { date: new Date().toISOString().slice(0, 10), category: "Content Update", area: "Case Studies", title: "", description: "" };
+
+function WorkLogsTab() {
+  const { workLogs, saveLog, deleteLog } = useData();
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState(emptyLog);
+  const [saving, setSaving] = useState(false);
+  const [seeding, setSeeding] = useState(false);
+
+  const openNew = () => { setForm(emptyLog); setEditing("new"); };
+  const openEdit = (log) => { setForm(log); setEditing(log.id); };
+  const cancel = () => setEditing(null);
+
+  const save = async () => {
+    if (!form.title) return;
+    setSaving(true);
+    await saveLog({ ...form, id: editing === "new" ? undefined : editing });
+    setSaving(false);
+    setEditing(null);
+  };
+
+  const del = async (id) => {
+    if (!confirm("Delete this log entry?")) return;
+    await deleteLog(id);
+  };
+
+  const seedHistory = async () => {
+    setSeeding(true);
+    for (const log of SEED_LOGS) await saveLog(log);
+    setSeeding(false);
+  };
+
+  const formatDate = (iso) => {
+    const d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  };
+
+  return (
+    <div>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+        <p style={{ fontSize: 13, color: T.muted, fontFamily: "'DM Sans', sans-serif" }}>
+          A plain-English record of changes made to this website — content updates, new features, and fixes.
+        </p>
+        <Btn onClick={openNew}>+ Add Log</Btn>
+      </div>
+
+      {editing && (
+        <div style={{ background: T.warmWhite, border: `1.5px solid ${T.clay}`, borderRadius: 16, padding: 28, marginBottom: 24 }}>
+          <p style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 500, color: T.ink, marginBottom: 20 }}>
+            {editing === "new" ? "New Log Entry" : "Edit Log Entry"}
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 14, marginBottom: 14 }}>
+            <input type="date" style={inp} value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            <select style={inp} value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
+            </select>
+            <select style={inp} value={form.area} onChange={(e) => setForm({ ...form, area: e.target.value })}>
+              {AREAS.map((a) => <option key={a}>{a}</option>)}
+            </select>
+          </div>
+          <input style={{ ...inp, marginBottom: 14 }} placeholder="Title — short description of the change *" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+          <textarea style={{ ...inp, minHeight: 90, resize: "vertical", marginBottom: 20 }} placeholder="Description — what changed and why (plain language, no jargon)" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+          <div style={{ display: "flex", gap: 12 }}>
+            <Btn onClick={save} disabled={saving}>{saving ? "Saving…" : "Save"}</Btn>
+            <Btn outline onClick={cancel}>Cancel</Btn>
+          </div>
+        </div>
+      )}
+
+      {workLogs.length === 0 && !editing && (
+        <div style={{ background: T.white, border: "1px solid rgba(0,0,0,0.07)", borderRadius: 14, padding: "40px 24px", textAlign: "center" }}>
+          <p style={{ fontSize: 15, color: T.muted, fontFamily: "'DM Sans', sans-serif", marginBottom: 20 }}>No logs yet.</p>
+          <Btn outline onClick={seedHistory} disabled={seeding}>
+            {seeding ? "Loading history…" : "Load previous change history"}
+          </Btn>
+        </div>
+      )}
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        {workLogs.map((log) => {
+          const catColor = CATEGORY_COLORS[log.category] || CATEGORY_COLORS["Content Update"];
+          return (
+            <div key={log.id} style={{ background: T.white, border: "1px solid rgba(0,0,0,0.07)", borderRadius: 14, padding: "20px 24px" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16 }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8, flexWrap: "wrap" }}>
+                    <span style={{ fontSize: 13, color: T.muted, fontFamily: "'DM Sans', sans-serif" }}>{formatDate(log.date)}</span>
+                    <span style={{ fontSize: 11, padding: "2px 10px", borderRadius: 100, background: catColor.bg, color: catColor.text, fontFamily: "'DM Sans', sans-serif", fontWeight: 500 }}>{log.category}</span>
+                    <span style={{ fontSize: 11, padding: "2px 10px", borderRadius: 100, background: "rgba(0,0,0,0.05)", color: T.muted, fontFamily: "'DM Sans', sans-serif" }}>{log.area}</span>
+                  </div>
+                  <p style={{ fontFamily: "'Fraunces', serif", fontSize: 16, fontWeight: 500, color: T.ink, marginBottom: 6 }}>{log.title}</p>
+                  {log.description && <p style={{ fontSize: 13, color: T.muted, fontFamily: "'DM Sans', sans-serif", lineHeight: 1.6 }}>{log.description}</p>}
+                </div>
+                <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
+                  <Btn small outline onClick={() => openEdit(log)}>Edit</Btn>
+                  <Btn small danger onClick={() => del(log.id)}>Delete</Btn>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // ── Admin Dashboard ───────────────────────────────────────────────────────────
-const TABS = ["Case Studies", "Experience", "Education", "Personal Info"];
+const TABS = ["Case Studies", "Experience", "Education", "Personal Info", "Work Logs"];
 
 function Dashboard({ onLogout }) {
   const [tab, setTab] = useState(0);
@@ -341,6 +492,7 @@ function Dashboard({ onLogout }) {
         {tab === 1 && <ExperienceTab />}
         {tab === 2 && <EducationTab />}
         {tab === 3 && <PersonalInfoTab />}
+        {tab === 4 && <WorkLogsTab />}
       </div>
     </div>
   );
