@@ -1,4 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { Routes, Route, Link } from "react-router-dom";
+import CaseStudyPage from "./pages/CaseStudy.jsx";
+import AdminPage from "./pages/Admin.jsx";
+import { DataProvider, useData } from "./context/DataContext.jsx";
 
 // ── Tokens ────────────────────────────────────────────────────────────────────
 const T = {
@@ -130,7 +134,7 @@ function Nav() {
       <span style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500, color: T.clay, cursor: "pointer" }}
         onClick={() => scroll("hero")}>AJ ✦</span>
       <div style={{ display: "flex", gap: 36 }}>
-        {["work", "about", "contact"].map(id => (
+        {["work", "experience", "education", "about", "contact"].map(id => (
           <NavLink key={id} onClick={() => scroll(id)}>{id.charAt(0).toUpperCase() + id.slice(1)}</NavLink>
         ))}
       </div>
@@ -226,35 +230,87 @@ function Btn({ children, primary, onClick }) {
 }
 
 // ── Case Studies ──────────────────────────────────────────────────────────────
-const cases = [
+export const cases = [
   {
-    title: "Redesigning onboarding for a fintech app — from 40% to 78% completion",
-    desc: "Led end-to-end UX for a 3-step onboarding overhaul. Research revealed users dropped off at identity verification — we reframed it entirely.",
-    tags: [{ label: "Product Design", color: "#fde8d8", text: T.clay }, { label: "Mobile", color: "#fde8d8", text: T.clay }],
+    slug: "national-pension-scheme",
+    title: "National Pension Scheme",
+    subtitle: "Redesigning the NPS experience for millions of subscribers",
+    desc: "End-to-end redesign of the National Pension Scheme portal — simplifying complex financial workflows and making retirement planning accessible to all.",
+    tags: [{ label: "Product Design", color: "#fde8d8", text: T.clay }, { label: "Gov-Tech", color: "#fde8d8", text: T.clay }],
     grad: "linear-gradient(135deg,#fde8d8,#f5b899)",
     accent: "#f5b899",
     featured: true,
+    role: "Lead UX Designer",
+    timeline: "4 months",
+    tools: "Figma, Maze, Miro",
+    problem: "The existing NPS portal was overwhelming for first-time users, with dense financial jargon, unclear navigation, and no guidance through key actions like account setup, fund selection, or withdrawal. Drop-off rates were high and user trust was low.",
+    process: [
+      { step: "Research", desc: "Conducted 20+ interviews with NPS subscribers across age groups. Ran contextual inquiry sessions and analysed support ticket themes to identify top pain points." },
+      { step: "Define", desc: "Synthesised findings into user personas and journey maps. Prioritised three critical flows: onboarding, contribution tracking, and withdrawal initiation." },
+      { step: "Design", desc: "Designed simplified, step-by-step flows with plain-language copy, progress indicators, and contextual help. Created a component library aligned to government design standards." },
+      { step: "Test", desc: "Ran 3 rounds of usability testing with 8 participants each. Iterated on information hierarchy, form design, and error states based on findings." },
+    ],
+    outcome: "Redesigned portal reduced average task completion time by 42%. Onboarding drop-off decreased significantly. Received positive feedback from both subscribers and administrators during pilot rollout.",
   },
   {
-    title: "Building a design system for a SaaS dashboard",
-    desc: "Created a component library and token system that reduced design inconsistencies by 60% across a team of 8 designers.",
-    tags: [{ label: "UX Research", color: "#d4eae3", text: "#3d7a6a" }, { label: "Web App", color: "#d4eae3", text: "#3d7a6a" }],
+    slug: "investment-portfolio",
+    title: "Investment Portfolio",
+    subtitle: "Helping users understand and manage their investments at a glance",
+    desc: "Designed an intuitive investment portfolio dashboard that turns complex financial data into clear, actionable insights for retail investors.",
+    tags: [{ label: "UX Design", color: "#d4eae3", text: "#3d7a6a" }, { label: "Fintech", color: "#d4eae3", text: "#3d7a6a" }],
     grad: "linear-gradient(135deg,#d4eae3,#8fcabb)",
     accent: "#8fcabb",
+    role: "Product Designer",
+    timeline: "3 months",
+    tools: "Figma, FigJam, Hotjar",
+    problem: "Retail investors using the platform struggled to understand their overall portfolio health. Data was fragmented across multiple screens, charts were hard to interpret, and users couldn't easily act on insights — leading to low engagement and high churn.",
+    process: [
+      { step: "Research", desc: "Analysed in-app behaviour via Hotjar heatmaps and session recordings. Interviewed 15 active investors to understand their mental models around portfolio tracking." },
+      { step: "Define", desc: "Created affinity maps and opportunity frameworks. Defined the core job-to-be-done: users want to know at a glance — am I on track, and what should I do next?" },
+      { step: "Design", desc: "Designed a unified portfolio view with a health score, allocation breakdown, performance trends, and one-tap actions. Prioritised clarity over data density." },
+      { step: "Test", desc: "Conducted A/B prototype testing with 12 users. Validated that the simplified dashboard improved comprehension and confidence in taking next steps." },
+    ],
+    outcome: "New dashboard increased daily active engagement by 35%. Users reported higher confidence in understanding their portfolio. Feature became the most-used screen in the app post-launch.",
   },
   {
-    title: "Designing a habit tracker — concept to launch in 10 weeks",
-    desc: "Zero to shipped. Conducted 15 user interviews, 3 rounds of prototype testing, and launched to 2K users in beta.",
-    tags: [{ label: "0→1 Product", color: "#fef3e2", text: "#9a6e20" }, { label: "Consumer", color: "#fef3e2", text: "#9a6e20" }],
+    slug: "reporting-module",
+    title: "Reporting Module",
+    subtitle: "Turning data into decisions for operations teams",
+    desc: "Designed a flexible reporting module for a B2B SaaS platform, enabling operations teams to generate, customise, and share reports without needing engineering support.",
+    tags: [{ label: "B2B SaaS", color: "#fef3e2", text: "#9a6e20" }, { label: "Data UX", color: "#fef3e2", text: "#9a6e20" }],
     grad: "linear-gradient(135deg,#fef3e2,#f5d99a)",
     accent: "#f5d99a",
+    role: "Senior UX Designer",
+    timeline: "3 months",
+    tools: "Figma, Notion, Loom",
+    problem: "Operations teams were dependent on the engineering team to pull custom reports — a process that took 3–5 days per request. This created bottlenecks, slowed decisions, and frustrated both teams.",
+    process: [
+      { step: "Research", desc: "Shadowed operations managers during their reporting workflows. Identified 8 recurring report types and the most common customisation needs across 5 customer accounts." },
+      { step: "Define", desc: "Mapped out the end-to-end reporting journey. Defined three user types — viewers, editors, and admins — with distinct needs and permission levels." },
+      { step: "Design", desc: "Designed a drag-and-drop report builder with pre-built templates, filter controls, and scheduling options. Included a preview mode and one-click sharing." },
+      { step: "Test", desc: "Ran task-based usability tests with 6 operations managers. Refined the template library and simplified the filter UI based on where users got stuck." },
+    ],
+    outcome: "Reporting module reduced engineering dependency for report generation by 80%. Teams could self-serve reports in under 5 minutes. Customer satisfaction scores for the feature improved by 28 points.",
   },
   {
-    title: "Making a government portal accessible to all users",
-    desc: "Audited and redesigned a public-facing portal for WCAG AA compliance. Improved task completion by 34% in usability testing.",
-    tags: [{ label: "Accessibility", color: "#ede0f5", text: "#7a4aa0" }, { label: "Redesign", color: "#ede0f5", text: "#7a4aa0" }],
+    slug: "saas-dashboard",
+    title: "SaaS Dashboard",
+    subtitle: "A unified command centre for platform administrators",
+    desc: "Led the redesign of a SaaS platform's admin dashboard — consolidating fragmented tools into a cohesive workspace that helps admins monitor, manage, and act efficiently.",
+    tags: [{ label: "Design Systems", color: "#ede0f5", text: "#7a4aa0" }, { label: "Web App", color: "#ede0f5", text: "#7a4aa0" }],
     grad: "linear-gradient(135deg,#e8d8f0,#c4a8d8)",
     accent: "#c4a8d8",
+    role: "Lead UX Designer",
+    timeline: "5 months",
+    tools: "Figma, Storybook, Zeroheight",
+    problem: "Platform admins were juggling 4 separate tools to manage users, billing, analytics, and support. Context switching was constant, critical alerts were missed, and onboarding new admins took weeks.",
+    process: [
+      { step: "Research", desc: "Ran a 2-week diary study with 8 admins to understand daily workflows. Identified the top 10 tasks by frequency and urgency across all existing tools." },
+      { step: "Define", desc: "Defined a unified information architecture grouping tasks by workflow — not tool origin. Created a priority matrix to decide what appears on the main dashboard view." },
+      { step: "Design", desc: "Built a modular dashboard with customisable widgets, a global search, and a notification centre. Developed a full component library with 80+ components documented in Zeroheight." },
+      { step: "Test", desc: "Ran 4 rounds of testing including first-click tests, task flows, and a 2-week beta with 12 admins. Iterated on widget layout, navigation labels, and alert hierarchy." },
+    ],
+    outcome: "Consolidated 4 tools into one. Admin onboarding time dropped from 3 weeks to 4 days. Task completion rate on critical actions improved by 55%. Design system adopted across 3 product teams.",
   },
 ];
 
@@ -274,7 +330,8 @@ function CaseCard({ c, i }) {
   const delay = (i % 2) * 0.15;
 
   return (
-    <div ref={ref} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <Link ref={ref} to={`/case-study/${c.slug}`}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
         gridColumn: c.featured ? "span 2" : "span 1",
         display: c.featured ? "grid" : "flex",
@@ -282,7 +339,7 @@ function CaseCard({ c, i }) {
         flexDirection: c.featured ? undefined : "column",
         background: T.white, borderRadius: 20, overflow: "hidden",
         border: "1px solid rgba(0,0,0,0.06)",
-        cursor: "pointer",
+        cursor: "pointer", textDecoration: "none",
         transform: hov ? "translateY(-6px)" : "translateY(0)",
         boxShadow: hov ? "0 20px 60px rgba(42,31,26,0.12)" : "0 2px 12px rgba(42,31,26,0.05)",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
@@ -306,11 +363,12 @@ function CaseCard({ c, i }) {
           View case study →
         </span>
       </div>
-    </div>
+    </Link>
   );
 }
 
 function Work() {
+  const { cases: visibleCases } = useData();
   return (
     <section id="work" style={{ padding: "100px 60px", background: T.warmWhite }}>
       <Reveal>
@@ -325,7 +383,7 @@ function Work() {
         </div>
       </Reveal>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}>
-        {cases.map((c, i) => <CaseCard key={i} c={c} i={i} />)}
+        {visibleCases.map((c, i) => <CaseCard key={i} c={c} i={i} />)}
       </div>
     </section>
   );
@@ -379,6 +437,106 @@ function SkillPill({ children }) {
       style={{ background: hov ? "#fde8d8" : T.white, border: `1px solid ${hov ? T.clay : "rgba(212,98,58,0.2)"}`, color: T.ink, padding: "8px 18px", borderRadius: 100, fontSize: 13, fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", cursor: "default" }}>
       {children}
     </span>
+  );
+}
+
+// ── Work Experience ───────────────────────────────────────────────────────────
+
+function Experience() {
+  const { experiences } = useData();
+  return (
+    <section id="experience" style={{ padding: "100px 60px", background: T.cream }}>
+      <Reveal>
+        <SectionLabel>Work Experience</SectionLabel>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
+          Where I've <em style={{ color: T.clay, fontStyle: "italic" }}>worked</em>
+        </h2>
+      </Reveal>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {experiences.map((e, i) => <ExpCard key={i} e={e} i={i} />)}
+      </div>
+    </section>
+  );
+}
+
+function ExpCard({ e, i }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <Reveal delay={i * 0.1}>
+      <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+        style={{
+          background: T.white, borderRadius: 20, padding: "36px 40px",
+          border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
+          boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
+          transform: hov ? "translateY(-4px)" : "translateY(0)",
+          transition: "all 0.3s ease",
+        }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 12, marginBottom: 16 }}>
+          <div>
+            <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500, color: T.ink, marginBottom: 4 }}>{e.role}</div>
+            <div style={{ fontSize: 14, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif" }}>{e.company}</div>
+          </div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#fde8d8", padding: "4px 12px", borderRadius: 100 }}>{e.period}</span>
+            <span style={{ fontSize: 12, fontWeight: 500, color: T.muted, fontFamily: "'DM Sans', sans-serif", background: "rgba(0,0,0,0.04)", padding: "4px 12px", borderRadius: 100 }}>{e.type}</span>
+          </div>
+        </div>
+        <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif", marginBottom: 16 }}>{e.desc}</p>
+        <ul style={{ margin: 0, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
+          {e.highlights.map((h, j) => (
+            <li key={j} style={{ fontSize: 13, color: T.ink, fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <span style={{ color: T.clay, marginTop: 2, flexShrink: 0 }}>✦</span>
+              {h}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </Reveal>
+  );
+}
+
+// ── Education ─────────────────────────────────────────────────────────────────
+
+function Education() {
+  const { education } = useData();
+  return (
+    <section id="education" style={{ padding: "100px 60px", background: T.warmWhite }}>
+      <Reveal>
+        <SectionLabel>Education</SectionLabel>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
+          Where I <em style={{ color: T.clay, fontStyle: "italic" }}>learned</em> to design
+        </h2>
+      </Reveal>
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {education.map((e, i) => <EduCard key={i} e={e} i={i} />)}
+      </div>
+    </section>
+  );
+}
+
+function EduCard({ e, i }) {
+  const [hov, setHov] = useState(false);
+  return (
+    <Reveal delay={i * 0.1}>
+      <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+        style={{
+          background: T.white, borderRadius: 20, padding: "36px 40px",
+          border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
+          boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
+          transform: hov ? "translateY(-4px)" : "translateY(0)",
+          transition: "all 0.3s ease",
+          display: "flex", gap: 40, alignItems: "flex-start", flexWrap: "wrap",
+        }}>
+        <div style={{ minWidth: 120 }}>
+          <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#fde8d8", padding: "4px 12px", borderRadius: 100 }}>{e.year}</span>
+        </div>
+        <div style={{ flex: 1 }}>
+          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500, color: T.ink, marginBottom: 4 }}>{e.degree}</div>
+          <div style={{ fontSize: 14, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif", marginBottom: 10 }}>{e.school}</div>
+          <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>{e.desc}</p>
+        </div>
+      </div>
+    </Reveal>
   );
 }
 
@@ -449,20 +607,35 @@ function Footer() {
   );
 }
 
+// ── Home Page ─────────────────────────────────────────────────────────────────
+function HomePage() {
+  return (
+    <div style={{ background: T.cream, minHeight: "100vh" }}>
+      <Nav />
+      <Hero />
+      <Work />
+      <About />
+      <Experience />
+      <Education />
+      <Contact />
+      <Footer />
+    </div>
+  );
+}
+
 // ── App ───────────────────────────────────────────────────────────────────────
 export default function App() {
   useFonts();
   useEffect(() => { document.body.style.cursor = "none"; document.body.style.overflowX = "hidden"; return () => { document.body.style.cursor = ""; }; }, []);
 
   return (
-    <div style={{ background: T.cream, minHeight: "100vh" }}>
+    <DataProvider>
       <Cursor />
-      <Nav />
-      <Hero />
-      <Work />
-      <About />
-      <Contact />
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/case-study/:slug" element={<CaseStudyPage />} />
+        <Route path="/admin" element={<AdminPage />} />
+      </Routes>
+    </DataProvider>
   );
 }
