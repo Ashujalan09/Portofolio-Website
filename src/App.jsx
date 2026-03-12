@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Routes, Route, Link } from "react-router-dom";
-import CaseStudyPage from "./pages/CaseStudy.jsx";
+import NationalPensionScheme from "./pages/case-studies/NationalPensionScheme.jsx";
+import InvestmentPortfolio from "./pages/case-studies/InvestmentPortfolio.jsx";
+import ReportingModule from "./pages/case-studies/ReportingModule.jsx";
+import SaasDashboard from "./pages/case-studies/SaasDashboard.jsx";
 import AdminPage from "./pages/Admin.jsx";
 import { DataProvider, useData } from "./context/DataContext.jsx";
 
@@ -29,6 +32,17 @@ function useFonts() {
       "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400;1,9..144,500&family=DM+Sans:wght@300;400;500&display=swap";
     document.head.appendChild(link);
   }, []);
+}
+
+// ── useWindowWidth ────────────────────────────────────────────────────────────
+function useWindowWidth() {
+  const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
+  useEffect(() => {
+    const h = () => setW(window.innerWidth);
+    window.addEventListener("resize", h);
+    return () => window.removeEventListener("resize", h);
+  }, []);
+  return w;
 }
 
 // ── useInView ─────────────────────────────────────────────────────────────────
@@ -112,32 +126,69 @@ function Cursor() {
 // ── Nav ───────────────────────────────────────────────────────────────────────
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const w = useWindowWidth();
+  const isMobile = w < 768;
+
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", h);
     return () => window.removeEventListener("scroll", h);
   }, []);
 
-  const scroll = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const scroll = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setMenuOpen(false);
+  };
+
+  const navItems = ["work", "experience", "education", "about", "contact"];
 
   return (
     <nav style={{
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
       display: "flex", justifyContent: "space-between", alignItems: "center",
-      padding: "18px 60px",
-      background: scrolled ? "rgba(253,246,238,0.9)" : "transparent",
-      backdropFilter: scrolled ? "blur(14px)" : "none",
-      borderBottom: scrolled ? `1px solid rgba(212,98,58,0.1)` : "1px solid transparent",
+      padding: `18px clamp(20px,5vw,60px)`,
+      background: scrolled || menuOpen ? "rgba(253,246,238,0.95)" : "transparent",
+      backdropFilter: scrolled || menuOpen ? "blur(14px)" : "none",
+      borderBottom: scrolled || menuOpen ? `1px solid rgba(212,98,58,0.1)` : "1px solid transparent",
       transition: "all 0.3s ease",
       fontFamily: "'DM Sans', sans-serif",
     }}>
       <span style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500, color: T.clay, cursor: "pointer" }}
         onClick={() => scroll("hero")}>AJ ✦</span>
-      <div style={{ display: "flex", gap: 36 }}>
-        {["work", "experience", "education", "about", "contact"].map(id => (
-          <NavLink key={id} onClick={() => scroll(id)}>{id.charAt(0).toUpperCase() + id.slice(1)}</NavLink>
-        ))}
-      </div>
+
+      {isMobile ? (
+        <button
+          onClick={() => setMenuOpen(o => !o)}
+          style={{ background: "none", border: "none", cursor: "pointer", color: T.clay, fontSize: 22, lineHeight: 1, padding: 4, display: "flex", alignItems: "center" }}
+          aria-label="Toggle menu">
+          {menuOpen ? "✕" : "☰"}
+        </button>
+      ) : (
+        <div style={{ display: "flex", gap: 36 }}>
+          {navItems.map(id => (
+            <NavLink key={id} onClick={() => scroll(id)}>{id.charAt(0).toUpperCase() + id.slice(1)}</NavLink>
+          ))}
+        </div>
+      )}
+
+      {/* Mobile dropdown */}
+      {isMobile && menuOpen && (
+        <div style={{
+          position: "absolute", top: "100%", left: 0, right: 0,
+          background: "rgba(253,246,238,0.97)", backdropFilter: "blur(16px)",
+          borderBottom: `1px solid rgba(212,98,58,0.1)`,
+          padding: "8px 0 16px",
+          display: "flex", flexDirection: "column",
+        }}>
+          {navItems.map(id => (
+            <button key={id} onClick={() => scroll(id)}
+              style={{ background: "none", border: "none", borderBottom: "1px solid rgba(212,98,58,0.07)", cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 400, color: T.ink, padding: "14px clamp(20px,5vw,60px)" }}>
+              {id.charAt(0).toUpperCase() + id.slice(1)}
+            </button>
+          ))}
+        </div>
+      )}
     </nav>
   );
 }
@@ -171,8 +222,11 @@ const blobAnim = `
 `;
 
 function Hero() {
+  const w = useWindowWidth();
+  const isMobile = w < 768;
+
   return (
-    <section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: "120px 60px 80px", position: "relative", overflow: "hidden", background: T.cream }}>
+    <section id="hero" style={{ minHeight: "100vh", display: "flex", alignItems: "center", padding: `clamp(100px,15vw,120px) clamp(20px,6vw,60px) 80px`, position: "relative", overflow: "hidden", background: T.cream }}>
       <style>{blobAnim}</style>
       {/* Blobs */}
       {[
@@ -189,12 +243,12 @@ function Hero() {
           UX Designer
         </p>
 
-        <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(52px,7vw,96px)", lineHeight: 1.05, fontWeight: 500, letterSpacing: -2, color: T.ink, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.4s" }}>
+        <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(40px,7vw,96px)", lineHeight: 1.05, fontWeight: 500, letterSpacing: -2, color: T.ink, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.4s" }}>
           Designing things<br />people{" "}
           <em style={{ fontStyle: "italic", color: T.clay }}>love</em> to use
         </h1>
 
-        <p style={{ marginTop: 28, fontSize: 18, color: T.muted, lineHeight: 1.7, maxWidth: 520, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.6s" }}>
+        <p style={{ marginTop: 28, fontSize: "clamp(15px,2vw,18px)", color: T.muted, lineHeight: 1.7, maxWidth: 520, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.6s" }}>
           Hi, I'm Ashutosh — I craft thoughtful digital experiences that balance user needs with business goals, with a love for clean interactions and warm aesthetics.
         </p>
 
@@ -204,10 +258,12 @@ function Hero() {
         </div>
       </div>
 
-      <div style={{ position: "absolute", bottom: 40, left: 60, display: "flex", alignItems: "center", gap: 10, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: T.muted, fontFamily: "'DM Sans', sans-serif", opacity: 0, animation: "fadeUp 0.8s ease forwards 1.2s" }}>
-        <div style={{ width: 1, height: 40, background: T.muted, animation: "scrollLine 2s ease-in-out infinite" }} />
-        Scroll
-      </div>
+      {!isMobile && (
+        <div style={{ position: "absolute", bottom: 40, left: "clamp(20px,6vw,60px)", display: "flex", alignItems: "center", gap: 10, fontSize: 12, letterSpacing: 1.5, textTransform: "uppercase", color: T.muted, fontFamily: "'DM Sans', sans-serif", opacity: 0, animation: "fadeUp 0.8s ease forwards 1.2s" }}>
+          <div style={{ width: 1, height: 40, background: T.muted, animation: "scrollLine 2s ease-in-out infinite" }} />
+          Scroll
+        </div>
+      )}
     </section>
   );
 }
@@ -327,16 +383,19 @@ function MockupSVG({ accent }) {
 function CaseCard({ c, i }) {
   const [hov, setHov] = useState(false);
   const [ref, vis] = useInView(0.1);
+  const w = useWindowWidth();
+  const isMobile = w < 768;
   const delay = (i % 2) * 0.15;
+  const isFeatured = c.featured && !isMobile;
 
   return (
     <Link ref={ref} to={`/case-study/${c.slug}`}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        gridColumn: c.featured ? "span 2" : "span 1",
-        display: c.featured ? "grid" : "flex",
-        gridTemplateColumns: c.featured ? "1fr 1fr" : undefined,
-        flexDirection: c.featured ? undefined : "column",
+        gridColumn: isFeatured ? "span 2" : "span 1",
+        display: isFeatured ? "grid" : "flex",
+        gridTemplateColumns: isFeatured ? "1fr 1fr" : undefined,
+        flexDirection: isFeatured ? undefined : "column",
         background: T.white, borderRadius: 20, overflow: "hidden",
         border: "1px solid rgba(0,0,0,0.06)",
         cursor: "pointer", textDecoration: "none",
@@ -347,17 +406,17 @@ function CaseCard({ c, i }) {
         transitionDelay: `${delay}s`,
       }}>
       {/* Image */}
-      <div style={{ background: c.grad, display: "flex", alignItems: "center", justifyContent: "center", aspectRatio: c.featured ? "auto" : "16/10", minHeight: c.featured ? 260 : undefined }}>
+      <div style={{ background: c.grad, display: "flex", alignItems: "center", justifyContent: "center", aspectRatio: isFeatured ? "auto" : "16/10", minHeight: isFeatured ? 260 : undefined }}>
         <MockupSVG accent={c.accent} />
       </div>
       {/* Body */}
-      <div style={{ padding: c.featured ? "48px 40px" : "28px 32px 32px", display: "flex", flexDirection: "column", justifyContent: c.featured ? "center" : "flex-start" }}>
+      <div style={{ padding: isFeatured ? "48px 40px" : "24px 28px 28px", display: "flex", flexDirection: "column", justifyContent: isFeatured ? "center" : "flex-start" }}>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 }}>
           {c.tags.map(t => (
             <span key={t.label} style={{ fontSize: 11, fontWeight: 500, letterSpacing: 0.5, padding: "4px 12px", borderRadius: 100, background: t.color, color: t.text, fontFamily: "'DM Sans', sans-serif" }}>{t.label}</span>
           ))}
         </div>
-        <div style={{ fontFamily: "'Fraunces', serif", fontSize: c.featured ? 30 : 22, fontWeight: 500, letterSpacing: -0.5, color: T.ink, marginBottom: 10, lineHeight: 1.3 }}>{c.title}</div>
+        <div style={{ fontFamily: "'Fraunces', serif", fontSize: isFeatured ? 30 : 22, fontWeight: 500, letterSpacing: -0.5, color: T.ink, marginBottom: 10, lineHeight: 1.3 }}>{c.title}</div>
         <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, marginBottom: 20, fontFamily: "'DM Sans', sans-serif" }}>{c.desc}</p>
         <span style={{ fontSize: 13, fontWeight: 500, color: T.clay, display: "inline-flex", alignItems: "center", gap: hov ? 10 : 6, transition: "gap 0.2s", fontFamily: "'DM Sans', sans-serif" }}>
           View case study →
@@ -369,20 +428,22 @@ function CaseCard({ c, i }) {
 
 function Work() {
   const { cases: visibleCases } = useData();
+  const w = useWindowWidth();
+  const isMobile = w < 768;
   return (
-    <section id="work" style={{ padding: "100px 60px", background: T.warmWhite }}>
+    <section id="work" style={{ padding: `clamp(60px,8vw,100px) clamp(20px,6vw,60px)`, background: T.warmWhite }}>
       <Reveal>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: 60, flexWrap: "wrap", gap: 20 }}>
           <div>
             <SectionLabel>Selected work</SectionLabel>
-            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1 }}>
+            <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1 }}>
               Projects I'm <em style={{ color: T.clay, fontStyle: "italic" }}>proud of</em>
             </h2>
           </div>
           <p style={{ fontSize: 16, color: T.muted, maxWidth: 340, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>A mix of product design, research-led thinking, and end-to-end UX across web and mobile.</p>
         </div>
       </Reveal>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(2,1fr)", gap: 24 }}>
+      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 24 }}>
         {visibleCases.map((c, i) => <CaseCard key={i} c={c} i={i} />)}
       </div>
     </section>
@@ -393,16 +454,19 @@ function Work() {
 const skills = ["User Research", "Wireframing", "Prototyping", "Figma", "Design Systems", "Usability Testing", "Information Architecture", "Interaction Design"];
 
 function About() {
+  const w = useWindowWidth();
+  const isMobile = w < 768;
+
   return (
-    <section id="about" style={{ padding: "100px 60px", background: T.cream, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 80, alignItems: "center" }}>
+    <section id="about" style={{ padding: `clamp(60px,8vw,100px) clamp(20px,6vw,60px)`, background: T.cream, display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 48 : 80, alignItems: "center" }}>
       {/* Visual */}
       <Reveal>
         <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-          <div style={{ width: 320, height: 380, borderRadius: 24, background: "linear-gradient(160deg,#fde8d8,#f0c99a)", position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+          <div style={{ width: isMobile ? "100%" : 320, maxWidth: 320, height: 380, borderRadius: 24, background: "linear-gradient(160deg,#fde8d8,#f0c99a)", position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
             <div style={{ fontSize: 100, lineHeight: 1, paddingBottom: 20, filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.1))" }}>🧑‍💻</div>
           </div>
-          <div style={{ position: "absolute", top: 20, right: -10, background: T.white, borderRadius: 16, padding: "14px 20px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", fontSize: 13, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>✦ Available for work</div>
-          <div style={{ position: "absolute", bottom: 40, left: -20, background: T.white, borderRadius: 16, padding: "14px 20px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", fontFamily: "'DM Sans', sans-serif" }}>
+          <div style={{ position: "absolute", top: 20, right: isMobile ? 0 : -10, background: T.white, borderRadius: 16, padding: "12px 16px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", fontSize: 12, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>✦ Available for work</div>
+          <div style={{ position: "absolute", bottom: 40, left: isMobile ? 0 : -20, background: T.white, borderRadius: 16, padding: "12px 16px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", fontFamily: "'DM Sans', sans-serif" }}>
             <span style={{ fontFamily: "'Fraunces', serif", fontSize: 28, fontWeight: 700, color: T.clay, display: "block" }}>4+</span>
             <span style={{ fontSize: 11, color: T.muted }}>Years of experience</span>
           </div>
@@ -412,7 +476,7 @@ function About() {
       {/* Text */}
       <Reveal delay={0.15}>
         <SectionLabel>About me</SectionLabel>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px,3.5vw,52px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 24 }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(28px,3.5vw,52px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 24 }}>
           Designer who <em style={{ color: T.clay, fontStyle: "italic" }}>listens</em> first
         </h2>
         {[
@@ -445,10 +509,10 @@ function SkillPill({ children }) {
 function Experience() {
   const { experiences } = useData();
   return (
-    <section id="experience" style={{ padding: "100px 60px", background: T.cream }}>
+    <section id="experience" style={{ padding: `clamp(60px,8vw,100px) clamp(20px,6vw,60px)`, background: T.cream }}>
       <Reveal>
         <SectionLabel>Work Experience</SectionLabel>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
           Where I've <em style={{ color: T.clay, fontStyle: "italic" }}>worked</em>
         </h2>
       </Reveal>
@@ -465,7 +529,7 @@ function ExpCard({ e, i }) {
     <Reveal delay={i * 0.1}>
       <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
         style={{
-          background: T.white, borderRadius: 20, padding: "36px 40px",
+          background: T.white, borderRadius: 20, padding: `clamp(24px,4vw,36px) clamp(20px,4vw,40px)`,
           border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
           boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
           transform: hov ? "translateY(-4px)" : "translateY(0)",
@@ -500,10 +564,10 @@ function ExpCard({ e, i }) {
 function Education() {
   const { education } = useData();
   return (
-    <section id="education" style={{ padding: "100px 60px", background: T.warmWhite }}>
+    <section id="education" style={{ padding: `clamp(60px,8vw,100px) clamp(20px,6vw,60px)`, background: T.warmWhite }}>
       <Reveal>
         <SectionLabel>Education</SectionLabel>
-        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 60 }}>
           Where I <em style={{ color: T.clay, fontStyle: "italic" }}>learned</em> to design
         </h2>
       </Reveal>
@@ -520,17 +584,17 @@ function EduCard({ e, i }) {
     <Reveal delay={i * 0.1}>
       <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
         style={{
-          background: T.white, borderRadius: 20, padding: "36px 40px",
+          background: T.white, borderRadius: 20, padding: `clamp(24px,4vw,36px) clamp(20px,4vw,40px)`,
           border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
           boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
           transform: hov ? "translateY(-4px)" : "translateY(0)",
           transition: "all 0.3s ease",
-          display: "flex", gap: 40, alignItems: "flex-start", flexWrap: "wrap",
+          display: "flex", gap: "clamp(16px,4vw,40px)", alignItems: "flex-start", flexWrap: "wrap",
         }}>
-        <div style={{ minWidth: 120 }}>
+        <div style={{ minWidth: 100 }}>
           <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#fde8d8", padding: "4px 12px", borderRadius: 100 }}>{e.year}</span>
         </div>
-        <div style={{ flex: 1 }}>
+        <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500, color: T.ink, marginBottom: 4 }}>{e.degree}</div>
           <div style={{ fontSize: 14, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif", marginBottom: 10 }}>{e.school}</div>
           <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>{e.desc}</p>
@@ -543,17 +607,17 @@ function EduCard({ e, i }) {
 // ── Contact ───────────────────────────────────────────────────────────────────
 function Contact() {
   return (
-    <section id="contact" style={{ background: T.ink, textAlign: "center", padding: "120px 60px", position: "relative", overflow: "hidden" }}>
+    <section id="contact" style={{ background: T.ink, textAlign: "center", padding: `clamp(80px,12vw,120px) clamp(20px,6vw,60px)`, position: "relative", overflow: "hidden" }}>
       {[{ w: 400, h: 400, bg: T.clay, top: -100, left: -100 }, { w: 300, h: 300, bg: T.sage, bottom: -80, right: -80 }].map((b, i) => (
         <div key={i} style={{ position: "absolute", width: b.w, height: b.h, borderRadius: "50%", background: b.bg, top: b.top, bottom: b.bottom, left: b.left, right: b.right, filter: "blur(100px)", opacity: 0.15, pointerEvents: "none" }} />
       ))}
       <div style={{ position: "relative", zIndex: 1 }}>
         <Reveal>
           <SectionLabel light>Let's connect</SectionLabel>
-          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.white, marginBottom: 20, lineHeight: 1.1 }}>
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(32px,4vw,56px)", fontWeight: 500, letterSpacing: -1.5, color: T.white, marginBottom: 20, lineHeight: 1.1 }}>
             Got a project in mind?<br /><em style={{ color: T.terra, fontStyle: "italic" }}>Let's talk.</em>
           </h2>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 17, maxWidth: 440, margin: "0 auto 48px", lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "clamp(15px,2vw,17px)", maxWidth: 440, margin: "0 auto 48px", lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>
             I'm open to freelance projects, full-time roles, and interesting collaborations. Say hello — I'd love to hear from you.
           </p>
           <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
@@ -599,7 +663,7 @@ function SectionLabel({ children, light }) {
 // ── Footer ────────────────────────────────────────────────────────────────────
 function Footer() {
   return (
-    <footer style={{ background: T.ink, borderTop: "1px solid rgba(255,255,255,0.07)", padding: "28px 60px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+    <footer style={{ background: T.ink, borderTop: "1px solid rgba(255,255,255,0.07)", padding: `28px clamp(20px,6vw,60px)`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
       {["© 2025 Ashutosh Jalan. Crafted with care.", "UX Designer · Based in India"].map((t, i) => (
         <p key={i} style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>{t}</p>
       ))}
@@ -633,7 +697,10 @@ export default function App() {
       <Cursor />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/case-study/:slug" element={<CaseStudyPage />} />
+        <Route path="/case-study/national-pension-scheme" element={<NationalPensionScheme />} />
+        <Route path="/case-study/investment-portfolio" element={<InvestmentPortfolio />} />
+        <Route path="/case-study/reporting-module" element={<ReportingModule />} />
+        <Route path="/case-study/saas-dashboard" element={<SaasDashboard />} />
         <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </DataProvider>
