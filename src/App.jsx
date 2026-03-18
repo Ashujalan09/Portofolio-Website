@@ -240,7 +240,7 @@ function Hero() {
       <div style={{ position: "relative", zIndex: 1, maxWidth: 840 }}>
         <p style={{ fontSize: 13, letterSpacing: 2, textTransform: "uppercase", color: T.clay, fontFamily: "'DM Sans', sans-serif", fontWeight: 500, display: "flex", alignItems: "center", gap: 10, marginBottom: 24, opacity: 0, animation: "fadeUp 0.7s ease forwards 0.2s" }}>
           <span style={{ width: 32, height: 1.5, background: T.clay, display: "inline-block" }} />
-          UX Designer
+          Product Designer
         </p>
 
         <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(40px,7vw,96px)", lineHeight: 1.05, fontWeight: 500, letterSpacing: -2, color: T.ink, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.4s" }}>
@@ -249,7 +249,7 @@ function Hero() {
         </h1>
 
         <p style={{ marginTop: 28, fontSize: "clamp(15px,2vw,18px)", color: T.muted, lineHeight: 1.7, maxWidth: 520, fontFamily: "'DM Sans', sans-serif", fontWeight: 300, opacity: 0, animation: "fadeUp 0.8s ease forwards 0.6s" }}>
-          Hi, I'm Ashutosh — I craft thoughtful digital experiences that balance user needs with business goals, with a love for clean interactions and warm aesthetics.
+          Hi, I'm Ashutosh — a Product Designer who turns complex problems into intuitive, impactful experiences. I bridge user needs, business goals, and technical constraints to ship products people love.
         </p>
 
         <div style={{ display: "flex", gap: 16, marginTop: 44, flexWrap: "wrap", opacity: 0, animation: "fadeUp 0.8s ease forwards 0.8s" }}>
@@ -440,7 +440,7 @@ function Work() {
               Projects I'm <em style={{ color: T.clay, fontStyle: "italic" }}>proud of</em>
             </h2>
           </div>
-          <p style={{ fontSize: 16, color: T.muted, maxWidth: 340, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>A mix of product design, research-led thinking, and end-to-end UX across web and mobile.</p>
+          <p style={{ fontSize: 16, color: T.muted, maxWidth: 340, lineHeight: 1.7, fontFamily: "'DM Sans', sans-serif" }}>End-to-end product design — from research and strategy through to polished, shipped experiences across web and mobile.</p>
         </div>
       </Reveal>
       <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "repeat(2,1fr)", gap: 24 }}>
@@ -451,7 +451,7 @@ function Work() {
 }
 
 // ── About ─────────────────────────────────────────────────────────────────────
-const skills = ["User Research", "Wireframing", "Prototyping", "Figma", "Design Systems", "Usability Testing", "Information Architecture", "Interaction Design"];
+const skills = ["Product Strategy", "User Research", "Wireframing", "Prototyping", "Figma", "Design Systems", "Usability Testing", "Interaction Design", "Stakeholder Management", "Information Architecture"];
 
 function About() {
   const w = useWindowWidth();
@@ -477,11 +477,11 @@ function About() {
       <Reveal delay={0.15}>
         <SectionLabel>About me</SectionLabel>
         <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(28px,3.5vw,52px)", fontWeight: 500, letterSpacing: -1.5, color: T.ink, lineHeight: 1.1, marginBottom: 24 }}>
-          Designer who <em style={{ color: T.clay, fontStyle: "italic" }}>listens</em> first
+          Designer who <em style={{ color: T.clay, fontStyle: "italic" }}>thinks</em> in systems
         </h2>
         {[
-          <>I'm <strong>Ashutosh Jalan</strong>, a UX Designer passionate about creating experiences that feel natural, delightful, and genuinely useful. I believe the best design is often invisible — it just works.</>,
-          <>My process starts with <strong>deep empathy</strong> — I spend time with users before touching any design tool. From research synthesis to polished prototypes, I care about every step of the journey.</>,
+          <>I'm <strong>Ashutosh Jalan</strong>, a Product Designer passionate about shaping products from concept to launch. I believe great design lives at the intersection of user empathy, business clarity, and technical possibility.</>,
+          <>My process starts with <strong>understanding the problem deeply</strong> — talking to users, studying data, and aligning with stakeholders. From early discovery to final handoff, I care about every decision along the way.</>,
           <>When I'm not designing, I'm obsessing over <strong>personal productivity systems</strong>, exploring new apps, or sketching ideas in my notebook.</>
         ].map((t, i) => (
           <p key={i} style={{ fontSize: 16, color: T.muted, lineHeight: 1.8, marginBottom: 14, fontFamily: "'DM Sans', sans-serif", fontWeight: 300 }}>{t}</p>
@@ -664,7 +664,7 @@ function SectionLabel({ children, light }) {
 function Footer() {
   return (
     <footer style={{ background: T.ink, borderTop: "1px solid rgba(255,255,255,0.07)", padding: `28px clamp(20px,6vw,60px)`, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
-      {["© 2025 Ashutosh Jalan. Crafted with care.", "UX Designer · Based in India"].map((t, i) => (
+      {["© 2025 Ashutosh Jalan. Crafted with care.", "Product Designer · Based in India"].map((t, i) => (
         <p key={i} style={{ color: "rgba(255,255,255,0.3)", fontSize: 13, fontFamily: "'DM Sans', sans-serif" }}>{t}</p>
       ))}
     </footer>
@@ -701,7 +701,7 @@ export default function App() {
         <Route path="/case-study/investment-portfolio" element={<InvestmentPortfolio />} />
         <Route path="/case-study/reporting-module" element={<ReportingModule />} />
         <Route path="/case-study/saas-dashboard" element={<SaasDashboard />} />
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/portal" element={<AdminPage />} />
       </Routes>
     </DataProvider>
   );
