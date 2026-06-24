@@ -4,8 +4,8 @@ import { useData } from "../context/DataContext.jsx";
 import { cases as allCases } from "../App.jsx";
 
 const T = {
-  cream: "#fdf6ee", warmWhite: "#fffaf4", clay: "#d4623a", terra: "#e8825c",
-  ink: "#2a1f1a", muted: "#7a6a62", white: "#ffffff", sage: "#7a9e8e",
+  cream: "#f8fafc", warmWhite: "#ffffff", clay: "#0a2540", terra: "#1d4ed8",
+  ink: "#090d16", muted: "#64748b", white: "#ffffff", sage: "#334155",
 };
 
 const ADMIN_PASSWORD = import.meta.env.VITE_ADMIN_PASSWORD || "admin123";
@@ -29,7 +29,7 @@ function Btn({ children, onClick, danger, outline, small, disabled }) {
         cursor: disabled ? "not-allowed" : "pointer", borderRadius: 8,
         padding: small ? "6px 14px" : "10px 20px",
         border: outline || danger ? `1.5px solid ${danger ? "#e05c5c" : T.clay}` : "none",
-        background: danger ? (hov ? "#e05c5c" : "transparent") : outline ? (hov ? "#fde8d8" : "transparent") : T.clay,
+        background: danger ? (hov ? "#e05c5c" : "transparent") : outline ? (hov ? "#dbeafe" : "transparent") : T.clay,
         color: danger ? (hov ? T.white : "#e05c5c") : outline ? T.clay : T.white,
         opacity: disabled ? 0.5 : 1,
         transition: "all 0.2s",
@@ -314,10 +314,10 @@ function PersonalInfoTab() {
 const CATEGORIES = ["Content Update", "New Feature", "Design Change", "Fix"];
 const AREAS = ["Case Studies", "Experience", "Education", "Personal Info", "Admin", "Code & Infrastructure"];
 const CATEGORY_COLORS = {
-  "Content Update": { bg: "#f0c99a", text: "#7a4a1a" },
-  "New Feature":    { bg: "#b8d4c8", text: "#2a5a4a" },
-  "Design Change":  { bg: "#e8e0d8", text: "#5a4a3a" },
-  "Fix":            { bg: "#fddcdc", text: "#a03030" },
+  "Content Update": { bg: "#dbeafe", text: "#1e40af" },
+  "New Feature":    { bg: "#e0f2fe", text: "#0369a1" },
+  "Design Change":  { bg: "#f1f5f9", text: "#475569" },
+  "Fix":            { bg: "#fee2e2", text: "#991b1b" },
 };
 
 const SEED_LOGS = [
@@ -473,7 +473,7 @@ function Dashboard({ onLogout }) {
       <nav style={{ background: T.white, borderBottom: "1px solid rgba(0,0,0,0.07)", padding: "16px 48px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
           <Link to="/" style={{ fontFamily: "'Fraunces', serif", fontSize: 18, fontWeight: 500, color: T.clay, textDecoration: "none" }}>AJ ✦</Link>
-          <span style={{ fontSize: 13, color: T.muted, background: "#fde8d8", padding: "3px 10px", borderRadius: 100 }}>Admin</span>
+          <span style={{ fontSize: 13, color: T.muted, background: "#dbeafe", padding: "3px 10px", borderRadius: 100 }}>Admin</span>
         </div>
         <button onClick={onLogout} style={{ background: "none", border: "1.5px solid rgba(0,0,0,0.12)", borderRadius: 8, padding: "8px 16px", fontSize: 13, color: T.muted, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>Log out</button>
       </nav>

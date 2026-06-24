@@ -9,15 +9,15 @@ import { DataProvider, useData } from "./context/DataContext.jsx";
 
 // ── Tokens ────────────────────────────────────────────────────────────────────
 const T = {
-  cream: "#fdf6ee",
-  warmWhite: "#fffaf4",
-  clay: "#d4623a",
-  terra: "#e8825c",
-  sand: "#f0c99a",
-  sage: "#7a9e8e",
-  sageLight: "#b8d4c8",
-  ink: "#2a1f1a",
-  muted: "#7a6a62",
+  cream: "#f8fafc",
+  warmWhite: "#ffffff",
+  clay: "#0a2540",
+  terra: "#1d4ed8",
+  sand: "#dbeafe",
+  sage: "#334155",
+  sageLight: "#e2e8f0",
+  ink: "#090d16",
+  muted: "#64748b",
   white: "#ffffff",
 };
 
@@ -117,8 +117,8 @@ function Cursor() {
   const base = { position: "fixed", borderRadius: "50%", pointerEvents: "none", zIndex: 9999, transform: "translate(-50%,-50%)", transition: "width 0.2s, height 0.2s" };
   return (
     <>
-      <div ref={dotRef} style={{ ...base, width: 12, height: 12, background: T.clay }} />
-      <div ref={ringRef} style={{ ...base, width: 36, height: 36, border: `1.5px solid ${T.clay}`, background: "transparent", opacity: 0.5, zIndex: 9998 }} />
+      <div ref={dotRef} style={{ ...base, width: 12, height: 12, background: T.terra }} />
+      <div ref={ringRef} style={{ ...base, width: 36, height: 36, border: `1.5px solid ${T.terra}`, background: "transparent", opacity: 0.5, zIndex: 9998 }} />
     </>
   );
 }
@@ -148,9 +148,9 @@ function Nav() {
       position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
       display: "flex", justifyContent: "space-between", alignItems: "center",
       padding: `18px clamp(20px,5vw,60px)`,
-      background: scrolled || menuOpen ? "rgba(253,246,238,0.95)" : "transparent",
+      background: scrolled || menuOpen ? "rgba(248,250,252,0.95)" : "transparent",
       backdropFilter: scrolled || menuOpen ? "blur(14px)" : "none",
-      borderBottom: scrolled || menuOpen ? `1px solid rgba(212,98,58,0.1)` : "1px solid transparent",
+      borderBottom: scrolled || menuOpen ? `1px solid rgba(10,37,64,0.1)` : "1px solid transparent",
       transition: "all 0.3s ease",
       fontFamily: "'DM Sans', sans-serif",
     }}>
@@ -176,14 +176,14 @@ function Nav() {
       {isMobile && menuOpen && (
         <div style={{
           position: "absolute", top: "100%", left: 0, right: 0,
-          background: "rgba(253,246,238,0.97)", backdropFilter: "blur(16px)",
-          borderBottom: `1px solid rgba(212,98,58,0.1)`,
+          background: "rgba(248,250,252,0.97)", backdropFilter: "blur(16px)",
+          borderBottom: `1px solid rgba(10,37,64,0.1)`,
           padding: "8px 0 16px",
           display: "flex", flexDirection: "column",
         }}>
           {navItems.map(id => (
             <button key={id} onClick={() => scroll(id)}
-              style={{ background: "none", border: "none", borderBottom: "1px solid rgba(212,98,58,0.07)", cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 400, color: T.ink, padding: "14px clamp(20px,5vw,60px)" }}>
+              style={{ background: "none", border: "none", borderBottom: "1px solid rgba(10,37,64,0.07)", cursor: "pointer", textAlign: "left", fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 400, color: T.ink, padding: "14px clamp(20px,5vw,60px)" }}>
               {id.charAt(0).toUpperCase() + id.slice(1)}
             </button>
           ))}
@@ -276,7 +276,7 @@ function Btn({ children, primary, onClick }) {
         fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 500, cursor: "pointer", borderRadius: 100, padding: "14px 32px", border: primary ? "none" : `1.5px solid ${T.clay}`,
         background: primary ? T.clay : hov ? T.clay : "transparent",
         color: primary ? T.white : hov ? T.white : T.clay,
-        boxShadow: primary ? `0 4px 20px rgba(212,98,58,${hov ? 0.4 : 0.3})` : "none",
+        boxShadow: primary ? `0 4px 20px rgba(10,37,64,${hov ? 0.4 : 0.3})` : "none",
         transform: hov ? "translateY(-2px)" : "none",
         transition: "all 0.2s ease",
       }}>
@@ -292,9 +292,9 @@ export const cases = [
     title: "Nation Pension Scheme Onboarding",
     subtitle: "Redesigning the NPS experience for millions of subscribers",
     desc: "End-to-end redesign of the National Pension Scheme portal — simplifying complex financial workflows and making retirement planning accessible to all.",
-    tags: [{ label: "Product Design", color: "#fde8d8", text: T.clay }, { label: "Gov-Tech", color: "#fde8d8", text: T.clay }],
-    grad: "linear-gradient(135deg,#fde8d8,#f5b899)",
-    accent: "#f5b899",
+    tags: [{ label: "Product Design", color: "#dbeafe", text: T.clay }, { label: "Gov-Tech", color: "#dbeafe", text: T.clay }],
+    grad: "linear-gradient(135deg,#dbeafe,#93c5fd)",
+    accent: "#3b82f6",
     featured: true,
     role: "Lead UX Designer",
     timeline: "4 months",
@@ -313,9 +313,9 @@ export const cases = [
     title: "Investment Portfolio",
     subtitle: "Helping users understand and manage their investments at a glance",
     desc: "Designed an intuitive investment portfolio dashboard that turns complex financial data into clear, actionable insights for retail investors.",
-    tags: [{ label: "UX Design", color: "#d4eae3", text: "#3d7a6a" }, { label: "Fintech", color: "#d4eae3", text: "#3d7a6a" }],
-    grad: "linear-gradient(135deg,#d4eae3,#8fcabb)",
-    accent: "#8fcabb",
+    tags: [{ label: "UX Design", color: "#e2e8f0", text: "#334155" }, { label: "Fintech", color: "#e2e8f0", text: "#334155" }],
+    grad: "linear-gradient(135deg,#e2e8f0,#cbd5e1)",
+    accent: "#64748b",
     role: "Product Designer",
     timeline: "3 months",
     tools: "Figma, FigJam, Hotjar",
@@ -333,9 +333,9 @@ export const cases = [
     title: "Reporting Module",
     subtitle: "Turning data into decisions for operations teams",
     desc: "Designed a flexible reporting module for a B2B SaaS platform, enabling operations teams to generate, customise, and share reports without needing engineering support.",
-    tags: [{ label: "B2B SaaS", color: "#fef3e2", text: "#9a6e20" }, { label: "Data UX", color: "#fef3e2", text: "#9a6e20" }],
-    grad: "linear-gradient(135deg,#fef3e2,#f5d99a)",
-    accent: "#f5d99a",
+    tags: [{ label: "B2B SaaS", color: "#e2e8f0", text: "#334155" }, { label: "Data UX", color: "#e2e8f0", text: "#334155" }],
+    grad: "linear-gradient(135deg,#f1f5f9,#e2e8f0)",
+    accent: "#94a3b8",
     role: "Senior UX Designer",
     timeline: "3 months",
     tools: "Figma, Notion, Loom",
@@ -353,9 +353,9 @@ export const cases = [
     title: "SaaS Dashboard",
     subtitle: "A unified command centre for platform administrators",
     desc: "Led the redesign of a SaaS platform's admin dashboard — consolidating fragmented tools into a cohesive workspace that helps admins monitor, manage, and act efficiently.",
-    tags: [{ label: "Design Systems", color: "#ede0f5", text: "#7a4aa0" }, { label: "Web App", color: "#ede0f5", text: "#7a4aa0" }],
-    grad: "linear-gradient(135deg,#e8d8f0,#c4a8d8)",
-    accent: "#c4a8d8",
+    tags: [{ label: "Design Systems", color: "#e0f2fe", text: "#0369a1" }, { label: "Web App", color: "#e0f2fe", text: "#0369a1" }],
+    grad: "linear-gradient(135deg,#e0f2fe,#bae6fd)",
+    accent: "#38bdf8",
     role: "Lead UX Designer",
     timeline: "5 months",
     tools: "Figma, Storybook, Zeroheight",
@@ -400,7 +400,7 @@ function CaseCard({ c, i }) {
         border: "1px solid rgba(0,0,0,0.06)",
         cursor: "pointer", textDecoration: "none",
         transform: hov ? "translateY(-6px)" : "translateY(0)",
-        boxShadow: hov ? "0 20px 60px rgba(42,31,26,0.12)" : "0 2px 12px rgba(42,31,26,0.05)",
+        boxShadow: hov ? "0 20px 60px rgba(9,13,22,0.12)" : "0 2px 12px rgba(9,13,22,0.05)",
         transition: "transform 0.3s ease, box-shadow 0.3s ease",
         opacity: vis ? 1 : 0,
         transitionDelay: `${delay}s`,
@@ -462,7 +462,7 @@ function About() {
       {/* Visual */}
       <Reveal>
         <div style={{ position: "relative", display: "flex", justifyContent: "center" }}>
-          <div style={{ width: isMobile ? "100%" : 320, maxWidth: 320, height: 380, borderRadius: 24, background: "linear-gradient(160deg,#fde8d8,#f0c99a)", position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
+          <div style={{ width: isMobile ? "100%" : 320, maxWidth: 320, height: 380, borderRadius: 24, background: "linear-gradient(160deg,#dbeafe,#0a2540)", position: "relative", overflow: "hidden", display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
             <div style={{ fontSize: 100, lineHeight: 1, paddingBottom: 20, filter: "drop-shadow(0 8px 24px rgba(0,0,0,0.1))" }}>🧑‍💻</div>
           </div>
           <div style={{ position: "absolute", top: 20, right: isMobile ? 0 : -10, background: T.white, borderRadius: 16, padding: "12px 16px", boxShadow: "0 8px 30px rgba(0,0,0,0.1)", fontSize: 12, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif", whiteSpace: "nowrap" }}>✦ Available for work</div>
@@ -498,7 +498,7 @@ function SkillPill({ children }) {
   const [hov, setHov] = useState(false);
   return (
     <span onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      style={{ background: hov ? "#fde8d8" : T.white, border: `1px solid ${hov ? T.clay : "rgba(212,98,58,0.2)"}`, color: T.ink, padding: "8px 18px", borderRadius: 100, fontSize: 13, fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", cursor: "default" }}>
+      style={{ background: hov ? "#dbeafe" : T.white, border: `1px solid ${hov ? T.clay : "rgba(10,37,64,0.2)"}`, color: T.ink, padding: "8px 18px", borderRadius: 100, fontSize: 13, fontFamily: "'DM Sans', sans-serif", transition: "all 0.2s", cursor: "default" }}>
       {children}
     </span>
   );
@@ -530,8 +530,8 @@ function ExpCard({ e, i }) {
       <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
         style={{
           background: T.white, borderRadius: 20, padding: `clamp(24px,4vw,36px) clamp(20px,4vw,40px)`,
-          border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
-          boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
+          border: `1px solid ${hov ? "rgba(10,37,64,0.25)" : "rgba(0,0,0,0.06)"}`,
+          boxShadow: hov ? "0 12px 40px rgba(9,13,22,0.1)" : "0 2px 12px rgba(9,13,22,0.04)",
           transform: hov ? "translateY(-4px)" : "translateY(0)",
           transition: "all 0.3s ease",
         }}>
@@ -541,7 +541,7 @@ function ExpCard({ e, i }) {
             <div style={{ fontSize: 14, fontWeight: 500, color: T.clay, fontFamily: "'DM Sans', sans-serif" }}>{e.company}</div>
           </div>
           <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#fde8d8", padding: "4px 12px", borderRadius: 100 }}>{e.period}</span>
+            <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#dbeafe", padding: "4px 12px", borderRadius: 100 }}>{e.period}</span>
             <span style={{ fontSize: 12, fontWeight: 500, color: T.muted, fontFamily: "'DM Sans', sans-serif", background: "rgba(0,0,0,0.04)", padding: "4px 12px", borderRadius: 100 }}>{e.type}</span>
           </div>
         </div>
@@ -585,14 +585,14 @@ function EduCard({ e, i }) {
       <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
         style={{
           background: T.white, borderRadius: 20, padding: `clamp(24px,4vw,36px) clamp(20px,4vw,40px)`,
-          border: `1px solid ${hov ? "rgba(212,98,58,0.25)" : "rgba(0,0,0,0.06)"}`,
-          boxShadow: hov ? "0 12px 40px rgba(42,31,26,0.1)" : "0 2px 12px rgba(42,31,26,0.04)",
+          border: `1px solid ${hov ? "rgba(10,37,64,0.25)" : "rgba(0,0,0,0.06)"}`,
+          boxShadow: hov ? "0 12px 40px rgba(9,13,22,0.1)" : "0 2px 12px rgba(9,13,22,0.04)",
           transform: hov ? "translateY(-4px)" : "translateY(0)",
           transition: "all 0.3s ease",
           display: "flex", gap: "clamp(16px,4vw,40px)", alignItems: "flex-start", flexWrap: "wrap",
         }}>
         <div style={{ minWidth: 100 }}>
-          <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#fde8d8", padding: "4px 12px", borderRadius: 100 }}>{e.year}</span>
+          <span style={{ fontSize: 12, fontWeight: 500, letterSpacing: 1, color: T.clay, fontFamily: "'DM Sans', sans-serif", background: "#dbeafe", padding: "4px 12px", borderRadius: 100 }}>{e.year}</span>
         </div>
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ fontFamily: "'Fraunces', serif", fontSize: 22, fontWeight: 500, color: T.ink, marginBottom: 4 }}>{e.degree}</div>
@@ -641,7 +641,7 @@ function ContactBtn({ children, primary, href, target }) {
         background: primary ? T.clay : hov ? "rgba(255,255,255,0.08)" : "transparent",
         color: T.white,
         border: primary ? "none" : "1.5px solid rgba(255,255,255,0.3)",
-        boxShadow: primary ? "0 4px 20px rgba(212,98,58,0.4)" : "none",
+        boxShadow: primary ? "0 4px 20px rgba(10,37,64,0.4)" : "none",
         transform: hov ? "translateY(-3px)" : "none",
         transition: "all 0.2s ease",
       }}>
