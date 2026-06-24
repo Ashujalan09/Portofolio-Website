@@ -103,7 +103,8 @@ export function DataProvider({ children }) {
         if (eduSnap.length > 0) setEducation(eduSnap);
         if (infoSnap.length > 0) setPersonalInfo({ ...defaultPersonalInfo, ...infoSnap[0] });
         if (logsSnap.length > 0) setWorkLogs([...logsSnap].sort((a, b) => b.date.localeCompare(a.date)));
-      } catch {
+      } catch (err) {
+        console.error("Firebase initialization/fetch failed:", err);
         // Firebase not configured yet — use defaults
       } finally {
         setLoading(false);

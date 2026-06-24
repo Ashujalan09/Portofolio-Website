@@ -2,15 +2,15 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const T = {
-  cream: "#fdf6ee",
-  warmWhite: "#fffaf4",
-  clay: "#d4623a",
-  terra: "#e8825c",
-  sand: "#f0c99a",
-  sage: "#7a9e8e",
-  sageLight: "#b8d4c8",
-  ink: "#2a1f1a",
-  muted: "#7a6a62",
+  cream: "#f8fafc",
+  warmWhite: "#ffffff",
+  clay: "#0a2540",
+  terra: "#1d4ed8",
+  sand: "#dbeafe",
+  sage: "#334155",
+  sageLight: "#e2e8f0",
+  ink: "#090d16",
+  muted: "#64748b",
   white: "#ffffff",
 };
 
@@ -36,15 +36,15 @@ export default function InvestmentPortfolio() {
     <div style={{ background: T.cream, minHeight: "100vh", fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* ── Top Nav ── */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px clamp(20px,5vw,60px)", background: "rgba(253,246,238,0.92)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,98,58,0.1)" }}>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px clamp(20px,5vw,60px)", background: "rgba(248,250,252,0.92)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(10,37,64,0.1)" }}>
         <Link to="/" style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500, color: T.clay, textDecoration: "none" }}>AJ ✦</Link>
         <button onClick={() => navigate(-1)} style={{ background: "none", border: `1.5px solid ${T.clay}`, color: T.clay, borderRadius: 100, padding: "8px 20px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>← Back</button>
       </nav>
 
       {/* ── Hero ── */}
-      <section style={{ paddingTop: "clamp(100px,14vw,140px)", paddingBottom: 80, paddingLeft: "clamp(20px,6vw,60px)", paddingRight: "clamp(20px,6vw,60px)", background: "linear-gradient(135deg, #fef3e8 0%, #fde0c0 50%, #fbd5a8 100%)", position: "relative", overflow: "hidden" }}>
+      <section style={{ paddingTop: "clamp(100px,14vw,140px)", paddingBottom: 80, paddingLeft: "clamp(20px,6vw,60px)", paddingRight: "clamp(20px,6vw,60px)", background: "linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #bae6fd 100%)", position: "relative", overflow: "hidden" }}>
         {/* Fade to cream at bottom */}
-        <div style={{ position: "absolute", inset: 0, opacity: 0.5, background: "linear-gradient(to bottom, transparent 55%, rgba(253,246,238,1))", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", inset: 0, opacity: 0.5, background: "linear-gradient(to bottom, transparent 55%, rgba(248,250,252,1))", pointerEvents: "none" }} />
         {/* Decorative phone silhouette */}
         <div style={{ position: "absolute", right: -20, top: 60, width: 200, height: 380, borderRadius: 32, background: "linear-gradient(160deg, #1d4ed8, #4f46e5)", opacity: 0.1, transform: "rotate(8deg)", pointerEvents: "none" }} />
         <div style={{ position: "absolute", right: 60, top: 80, width: 180, height: 340, borderRadius: 28, background: "linear-gradient(160deg, #1d4ed8, #4f46e5)", opacity: 0.06, transform: "rotate(4deg)", pointerEvents: "none" }} />
@@ -57,7 +57,7 @@ export default function InvestmentPortfolio() {
               { label: "Fintech", emoji: "📈" },
               { label: "Mobile App", emoji: "📱" },
             ].map((t) => (
-              <span key={t.label} style={{ fontSize: 12, fontWeight: 500, letterSpacing: 0.3, padding: "6px 14px", borderRadius: 100, background: "rgba(255,255,255,0.75)", color: T.clay, fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(8px)", border: "1px solid rgba(212,98,58,0.15)" }}>
+              <span key={t.label} style={{ fontSize: 12, fontWeight: 500, letterSpacing: 0.3, padding: "6px 14px", borderRadius: 100, background: "rgba(255,255,255,0.75)", color: T.clay, fontFamily: "'DM Sans', sans-serif", display: "flex", alignItems: "center", gap: 6, backdropFilter: "blur(8px)", border: "1px solid rgba(10,37,64,0.15)" }}>
                 <span style={{ fontSize: 13 }}>{t.emoji}</span>{t.label}
               </span>
             ))}
@@ -86,7 +86,7 @@ export default function InvestmentPortfolio() {
               { icon: "😕", text: "Hard-to-read charts" },
               { icon: "📉", text: "Low engagement" },
             ].map((chip) => (
-              <span key={chip.text} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, padding: "7px 16px", borderRadius: 100, background: "rgba(212,98,58,0.08)", color: T.clay, border: "1px solid rgba(212,98,58,0.14)" }}>
+              <span key={chip.text} style={{ display: "inline-flex", alignItems: "center", gap: 7, fontSize: 13, fontWeight: 500, padding: "7px 16px", borderRadius: 100, background: "rgba(10,37,64,0.08)", color: T.clay, border: "1px solid rgba(10,37,64,0.14)" }}>
                 <span>{chip.icon}</span>{chip.text}
               </span>
             ))}
@@ -127,7 +127,7 @@ export default function InvestmentPortfolio() {
               <div style={{ fontSize: 40, lineHeight: 1 }}>{card.emoji}</div>
               <div style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500, color: T.ink }}>{card.title}</div>
               <p style={{ fontSize: 14, color: T.muted, lineHeight: 1.7, fontStyle: "italic", flex: 1 }}>{card.quote}</p>
-              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(212,98,58,0.08)", border: "1px solid rgba(212,98,58,0.15)", width: "fit-content" }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 14px", borderRadius: 100, background: "rgba(10,37,64,0.08)", border: "1px solid rgba(10,37,64,0.15)", width: "fit-content" }}>
                 <span style={{ fontSize: 13, fontWeight: 700, color: T.clay }}>{card.stat}</span>
                 <span style={{ fontSize: 12, color: T.muted }}>{card.statLabel}</span>
               </div>
@@ -295,7 +295,7 @@ export default function InvestmentPortfolio() {
       </section>
 
       {/* ── Key Metrics Strip ── */}
-      <section style={{ padding: "clamp(40px,6vw,60px) clamp(20px,6vw,60px)", background: T.warmWhite, borderTop: "1px solid rgba(212,98,58,0.12)", borderBottom: "1px solid rgba(212,98,58,0.12)" }}>
+      <section style={{ padding: "clamp(40px,6vw,60px) clamp(20px,6vw,60px)", background: T.warmWhite, borderTop: "1px solid rgba(10,37,64,0.12)", borderBottom: "1px solid rgba(10,37,64,0.12)" }}>
         <div style={{ display: "flex", justifyContent: "center", gap: 0, flexWrap: "wrap" }}>
           {[
             { num: "35%", label: "Daily active users increase" },
@@ -303,7 +303,7 @@ export default function InvestmentPortfolio() {
             { num: "12", label: "Prototype test participants" },
             { num: "3 mo", label: "Design to launch" },
           ].map((stat, i) => (
-            <div key={stat.num} style={{ flex: "1 1 140px", textAlign: "center", padding: "20px clamp(16px,3vw,32px)", borderLeft: i % 2 !== 0 ? "1px solid rgba(212,98,58,0.12)" : "none" }}>
+            <div key={stat.num} style={{ flex: "1 1 140px", textAlign: "center", padding: "20px clamp(16px,3vw,32px)", borderLeft: i % 2 !== 0 ? "1px solid rgba(10,37,64,0.12)" : "none" }}>
               <div style={{ fontFamily: "'Fraunces', serif", fontSize: "clamp(36px,4vw,60px)", fontWeight: 500, color: T.clay, letterSpacing: -1, lineHeight: 1.1 }}>{stat.num}</div>
               <div style={{ fontSize: 13, color: T.muted, marginTop: 8, lineHeight: 1.5 }}>{stat.label}</div>
             </div>

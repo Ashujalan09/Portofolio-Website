@@ -2,21 +2,21 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const T = {
-  cream: "#fdf6ee",
-  warmWhite: "#fffaf4",
-  clay: "#d4623a",
-  terra: "#e8825c",
-  sand: "#f0c99a",
-  sage: "#7a9e8e",
-  ink: "#2a1f1a",
-  muted: "#7a6a62",
+  cream: "#f8fafc",
+  warmWhite: "#ffffff",
+  clay: "#0a2540",
+  terra: "#1d4ed8",
+  sand: "#dbeafe",
+  sage: "#334155",
+  ink: "#090d16",
+  muted: "#64748b",
   white: "#ffffff",
 };
 
 function SectionLabel({ children, light }) {
   return (
-    <p style={{ fontSize: 12, letterSpacing: 2.5, textTransform: "uppercase", color: light ? "#e8825c" : T.clay, fontWeight: 500, display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
-      <span style={{ width: 24, height: 1.5, background: light ? "#e8825c" : T.clay, display: "inline-block" }} />
+    <p style={{ fontSize: 12, letterSpacing: 2.5, textTransform: "uppercase", color: light ? "#1d4ed8" : T.clay, fontWeight: 500, display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+      <span style={{ width: 24, height: 1.5, background: light ? "#1d4ed8" : T.clay, display: "inline-block" }} />
       {children}
     </p>
   );
@@ -35,14 +35,14 @@ export default function NationalPensionScheme() {
     <div style={{ background: T.cream, minHeight: "100vh", fontFamily: "'DM Sans', sans-serif" }}>
 
       {/* ── Top Nav ── */}
-      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px clamp(20px,5vw,60px)", background: "rgba(253,246,238,0.92)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(212,98,58,0.1)" }}>
+      <nav style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, display: "flex", justifyContent: "space-between", alignItems: "center", padding: "18px clamp(20px,5vw,60px)", background: "rgba(248,250,252,0.92)", backdropFilter: "blur(14px)", borderBottom: "1px solid rgba(10,37,64,0.1)" }}>
         <Link to="/" style={{ fontFamily: "'Fraunces', serif", fontSize: 20, fontWeight: 500, color: T.clay, textDecoration: "none" }}>AJ ✦</Link>
         <button onClick={() => navigate(-1)} style={{ background: "none", border: `1.5px solid ${T.clay}`, color: T.clay, borderRadius: 100, padding: "8px 20px", fontSize: 13, fontWeight: 500, cursor: "pointer", fontFamily: "'DM Sans', sans-serif" }}>← Back</button>
       </nav>
 
       {/* ── Hero ── */}
-      <section style={{ paddingTop: 140, paddingBottom: 80, paddingLeft: "clamp(20px,6vw,60px)", paddingRight: "clamp(20px,6vw,60px)", background: "linear-gradient(135deg,#fde8d8,#f5b899)", position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, backdropFilter: "blur(0px)", opacity: 0.4, background: "linear-gradient(to bottom, transparent 60%, rgba(253,246,238,1))" }} />
+      <section style={{ paddingTop: 140, paddingBottom: 80, paddingLeft: "clamp(20px,6vw,60px)", paddingRight: "clamp(20px,6vw,60px)", background: "linear-gradient(135deg,#dbeafe,#93c5fd)", position: "relative", overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, backdropFilter: "blur(0px)", opacity: 0.4, background: "linear-gradient(to bottom, transparent 60%, rgba(248,250,252,1))" }} />
         <div style={{ position: "relative", zIndex: 1, maxWidth: 860 }}>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 20 }}>
             {[{ label: "Product Design", text: T.clay }, { label: "Gov-Tech", text: T.clay }].map((t) => (
